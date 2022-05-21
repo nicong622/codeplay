@@ -22,25 +22,43 @@ class RangeList {
    * @param {number} end
    * @param {'0' | '1'} bit
    */
-  toggle(target, start, end, bit) {
+  toggleBit(target, start, end, bit) {
     const count = end - start;
     const reg = RegExp(`(\\d{${start}})(\\d{${count}})(\\d*)`, 'g');
 
     return target.replace(reg, (match, p1, p2, p3) => `${p1}${bit.repeat(count)}${p3}`);
   }
 
+  /**
+   *
+   * @param {string} target
+   * @param {[number, number]} range
+   * @returns
+   */
   handleAdd(target, range) {
     if (range[1] > target.length) {
       target = target.padEnd(range[1], '0');
     }
 
-    return this.toggle(target, ...range, '1');
+    return this.toggleBit(target, ...range, '1');
   }
 
+  /**
+   *
+   * @param {string} target
+   * @param {[number, number]} range
+   * @returns
+   */
   handleRemove(target, range) {
-    return this.toggle(target, ...range, '0');
+    return this.toggleBit(target, ...range, '0');
   }
 
+  /**
+   *
+   * @param {function} handler
+   * @param {[number, number]} range
+   * @returns
+   */
   handleNegative(handler, range) {
     let temp = this.reverseString(this.negative);
     temp = handler(temp, [0 - range[1], 0 - range[0]]);
@@ -48,25 +66,34 @@ class RangeList {
   }
 
   /**
-   * Adds a range to the list
-   * @param {Array<number>} range - Array of two integers that specify beginning and end of range.
+   *
+   * @param {function} handler
+   * @param {[number, number]} range
    */
-  add(range) {
+  handleAddOrRemove(handler, range) {
     if (range[0] > range[1]) {
       [range[0], range[1]] = [range[1], range[0]];
     }
 
     if (range[0] >= 0) {
       // range 中全部是正数
-      this.positive = this.handleAdd(this.positive, range);
+      this.positive = handler(this.positive, range);
     } else if (range[1] < 0) {
       // all negative
-      this.negative = this.handleNegative(this.handleAdd.bind(this), range);
+      this.negative = this.handleNegative(handler, range);
     } else {
       // from negative to positive
-      this.negative = this.handleNegative(this.handleAdd.bind(this), [range[0], 0]);
-      this.positive = this.handleAdd(this.positive, [0, range[1]]);
+      this.negative = this.handleNegative(handler, [range[0], 0]);
+      this.positive = handler(this.positive, [0, range[1]]);
     }
+  }
+
+  /**
+   * Adds a range to the list
+   * @param {Array<number>} range - Array of two integers that specify beginning and end of range.
+   */
+  add(range) {
+    this.handleAddOrRemove(this.handleAdd.bind(this), range);
   }
 
   /**
@@ -74,21 +101,7 @@ class RangeList {
    * @param {Array<number>} range - Array of two integers that specify beginning and end of range.
    */
   remove(range) {
-    if (range[0] > range[1]) {
-      [range[0], range[1]] = [range[1], range[0]];
-    }
-
-    if (range[0] >= 0) {
-      // range 中全部是正数
-      this.positive = this.handleRemove(this.positive, range);
-    } else if (range[1] < 0) {
-      // all negative
-      this.negative = this.handleNegative(this.handleRemove.bind(this), range);
-    } else {
-      // from negative to positive
-      this.negative = this.handleNegative(this.handleRemove.bind(this), [range[0], 0]);
-      this.positive = this.handleRemove(this.positive, [0, range[1]]);
-    }
+    this.handleAddOrRemove(this.handleRemove.bind(this), range);
   }
 
   /**
@@ -162,10 +175,25 @@ rl.print();
 rl.add([20, 20]);
 rl.print();
 
+rl.add([20, 21]);
+rl.print();
+
+rl.add([2, 4]);
+rl.print();
+
+rl.add([3, 8]);
+rl.print();
+
 rl.remove([10, 10]);
 rl.print();
 
 rl.remove([10, 11]);
+rl.print();
+
+rl.remove([15, 17]);
+rl.print();
+
+rl.remove([3, 19]);
 rl.print();
 
 rl.add([-5, 0]);
