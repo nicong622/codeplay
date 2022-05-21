@@ -7,9 +7,9 @@
 
 class RangeList {
   constructor() {
-    // a string of '0' or '1', representing a range. e.g. [1, 5) => 01111; [3, 5) => 00011
-    this.positive = '';
-    this.negative = '';
+    // use a string of '0' or '1' to indicate range list. e.g. [1, 5) => 01111; [3, 5) => 00011
+    this.positive = ''; // indicating ranges that only include positive and zero
+    this.negative = ''; // indicating ranges that only include negative
   }
 
   reverseString(string) {
