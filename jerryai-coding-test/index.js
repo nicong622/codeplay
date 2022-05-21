@@ -37,10 +37,14 @@ class RangeList {
     return this.toggle(target, ...range, '1');
   }
 
-  addNegative(target, range) {
-    return this.reverseString(
-      this.handleAdd(this.reverseString(target), [0 - range[1], 0 - range[0]])
-    );
+  handleRemove(target, range) {
+    return this.toggle(target, ...range, '0');
+  }
+
+  handleNegative(handler, range) {
+    let temp = this.reverseString(this.negative);
+    temp = handler(temp, [0 - range[1], 0 - range[0]]);
+    return this.reverseString(temp);
   }
 
   /**
@@ -57,22 +61,12 @@ class RangeList {
       this.positive = this.handleAdd(this.positive, range);
     } else if (range[1] < 0) {
       // all negative
-      this.negative = this.addNegative(this.negative, range);
+      this.negative = this.handleNegative(this.handleAdd.bind(this), range);
     } else {
       // from negative to positive
-      this.negative = this.addNegative(this.negative, [range[0], 0]);
+      this.negative = this.handleNegative(this.handleAdd.bind(this), [range[0], 0]);
       this.positive = this.handleAdd(this.positive, [0, range[1]]);
     }
-  }
-
-  handleRemove(target, range) {
-    return this.toggle(target, ...range, '0');
-  }
-
-  removeNegative(target, range) {
-    return this.reverseString(
-      this.handleRemove(this.reverseString(target), [0 - range[1], 0 - range[0]], '0')
-    );
   }
 
   /**
@@ -89,10 +83,10 @@ class RangeList {
       this.positive = this.handleRemove(this.positive, range);
     } else if (range[1] < 0) {
       // all negative
-      this.negative = this.removeNegative(this.negative, range);
+      this.negative = this.handleNegative(this.handleRemove.bind(this), range);
     } else {
       // from negative to positive
-      this.negative = this.removeNegative(this.negative, [range[0], 0]);
+      this.negative = this.handleNegative(this.handleRemove.bind(this), [range[0], 0]);
       this.positive = this.handleRemove(this.positive, [0, range[1]]);
     }
   }
@@ -104,7 +98,7 @@ class RangeList {
    * @returns
    */
   findRanges(target, isPositive) {
-    // 利用正则找出所有连续的 '1'，以及他们的 index 和长度
+    // 利用正则找出所有连续的 '1'，以及他们的起止 index
     const regexp = RegExp('(1+)', 'gd');
 
     let ranges = [];
