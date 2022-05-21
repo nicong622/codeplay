@@ -35,37 +35,24 @@ class RangeList {
    * Prints out the list of ranges in the range list
    */
   print() {
+    const regexp = RegExp('(1+)', 'gd');
     const rangeString = this.rangeString;
-    const len = rangeString.length;
 
-    let ranges = '';
-    let i = 0;
-    let isARange = false;
+    let ranges = [];
+    let result = regexp.exec(rangeString);
 
-    while (i < len) {
-      if (rangeString[i] === '1') {
-        if (!isARange) {
-          isARange = true;
-          ranges += `[${i}, `;
-        }
-      } else {
-        if (isARange) {
-          isARange = false;
-          ranges += `${i}) `;
-        }
-      }
-
-      i++;
+    while (result !== null) {
+      const indice = result.indices[0];
+      ranges.push(`[${indice[0]}, ${indice[1]})`);
+      result = regexp.exec(rangeString);
     }
 
-    if (isARange) {
-      isARange = false;
-      ranges += `${i}) `;
-    }
-
-    console.log(ranges);
+    // console.log(ranges);
+    return ranges.join(' ');
   }
 }
+
+module.exports = RangeList;
 
 const rl = new RangeList();
 
