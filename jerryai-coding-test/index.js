@@ -17,7 +17,7 @@ class RangeList {
   }
 
   /**
-   * from 'start' to 'end'(not included), turns every charater in 'target' into 'bit'
+   * from start to end(not included), turns every char of target into bit
    * @param {number} start
    * @param {number} end
    * @param {'0' | '1'} bit
@@ -30,7 +30,7 @@ class RangeList {
   }
 
   /**
-   *
+   * turns every char (indexing between range) of target into '1' when calling add()
    * @param {string} target
    * @param {[number, number]} range
    * @returns
@@ -44,7 +44,7 @@ class RangeList {
   }
 
   /**
-   *
+   * turns every char (indexing between range) of target into '0' when calling remove()
    * @param {string} target
    * @param {[number, number]} range
    * @returns
@@ -54,7 +54,7 @@ class RangeList {
   }
 
   /**
-   *
+   * handle range that only includes negative
    * @param {function} handler
    * @param {[number, number]} range
    * @returns
