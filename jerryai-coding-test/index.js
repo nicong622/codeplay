@@ -24,9 +24,8 @@ class RangeList {
    */
   toggleBit(target, start, end, bit) {
     const count = end - start;
-    const reg = RegExp(`(\\d{${start}})(\\d{${count}})(\\d*)`, 'g');
 
-    return target.replace(reg, (match, p1, p2, p3) => `${p1}${bit.repeat(count)}${p3}`);
+    return target.slice(0, start) + bit.repeat(count) + target.slice(end);
   }
 
   /**
@@ -148,12 +147,9 @@ class RangeList {
     const nRanges = this.findRanges(this.reverseString(this.negative));
     const pRanges = this.findRanges(this.positive, true);
 
-    // 如果负数的最后一个 range 与 正数第一个 range 存在连续性，则合并成一个 range
-    if (nRanges.length && pRanges.length) {
-      if (nRanges.slice(-1)[0][1] === pRanges[0][0]) {
-        const start = nRanges.pop()[0];
-        pRanges[0][0] = start;
-      }
+    // 检查 this.negative 和 this.positive 之间是否存在连续性，有则可以合并成一个 range
+    if (this.negative.endsWith('1') && this.positive.startsWith('1')) {
+      pRanges[0][0] = nRanges.pop()[0];
     }
 
     const ranges = this.formatPrint([...nRanges, ...pRanges]);
