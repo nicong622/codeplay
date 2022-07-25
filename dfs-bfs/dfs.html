@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>DFS 深度优先搜索</title>
+</head>
+
+<body>
+  <div class="root">
+    <div class="1">
+      <div class="1-1">
+        <div class="1-1-1"></div>
+        <div class="1-1-2"></div>
+      </div>
+
+      <div class="1-2">
+        <div class="1-2-1"></div>
+      </div>
+    </div>
+
+    <div class="2">
+      <div class="2-1">
+        <div class="2-1-1"></div>
+        <div class="2-1-2"></div>
+      </div>
+
+      <div class="2-2">
+        <div class="2-2-1"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  function dfs1(node, nodeList = []) {
+    if (node) {
+      nodeList.push(node.className);
+
+      [...node.children].forEach(item => dfs(item, nodeList))
+    }
+
+    return nodeList
+  }
+
+  function dfs2(node) {
+    let nodeList = [];
+
+    if (node) {
+      nodeList.push(node.className);
+
+      nodeList = [...node.children].reduce((prev, item) => [...prev, ...dfs(item)], nodeList)
+    }
+
+    return nodeList;
+  }
+
+  function dfs3(node) {
+    let stack = [node];
+    let nodeList = [];
+
+    if (node) {
+      while (stack.length) {
+        const item = stack.shift();
+
+        nodeList.push(item.className);
+        stack = [...item.children, ...stack]
+      }
+    }
+
+    return nodeList;
+  }
+
+  const root = document.getElementsByClassName('root')[0]
+
+  console.log(dfs1(root))
+  console.log(dfs2(root))
+  console.log(dfs3(root))
+
+</script>
+
+</html>

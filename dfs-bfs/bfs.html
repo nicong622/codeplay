@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>BFS 广度优先搜索</title>
+</head>
+
+<body>
+  <div class="root">
+    <div class="1">
+      <div class="1-1">
+        <div class="1-1-1"></div>
+        <div class="1-1-2"></div>
+      </div>
+
+      <div class="1-2">
+        <div class="1-2-1"></div>
+      </div>
+    </div>
+
+    <div class="2">
+      <div class="2-1">
+        <div class="2-1-1"></div>
+        <div class="2-1-2"></div>
+      </div>
+
+      <div class="2-2">
+        <div class="2-2-1"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  function bfs(node) {
+    let stack = [node];
+    let nodeList = [];
+
+    if (node) {
+      while (stack.length) {
+        const item = stack.shift();
+
+        nodeList.push(item.className);
+        stack = [...stack, ...item.children]
+      }
+    }
+
+    return nodeList;
+  }
+
+  const root = document.getElementsByClassName('root')[0]
+
+  console.log(bfs(root))
+
+</script>
+
+</html>
