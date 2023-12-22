@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest ./jerryai-coding-test/test.js"
+    "test": "jest ./jerryai-coding-test/test.js",
+    "test:matrix.rotate": "jest ./matrix/rotate.test.js"
   },
   "repository": "git@github.com:nicong622/codeplay.git",
   "author": "liangningcong <liangningcong@gmail.com>",
